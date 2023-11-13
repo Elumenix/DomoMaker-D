@@ -63,7 +63,7 @@ const DomoList = (props) => {
             },
             body: JSON.stringify({ id, name, age, alive }),
         }).then(() => {
-            parentElement.parentElement.style.backgroundColor = '#ed5955';
+            parentElement.style.backgroundColor = '#ed5955';
             parentElement.style.borderColor = '#996260';
             parentElement.removeChild(e.target);
         });
