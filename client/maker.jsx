@@ -49,12 +49,33 @@ const DomoList = (props) => {
         );
     }
 
+    const killDomo = (e, id) => {
+        const parentElement = e.target.parentElement;
+        const name = parentElement.querySelector(".domoName").innerText.split(" ")[1];
+        const age = parentElement.querySelector(".domoAge").innerText.split(" ")[1];
+        const alive = false;
+
+
+        fetch('/updateDomo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id, name, age, alive }),
+        }).then(() => {
+            parentElement.parentElement.style.backgroundColor = '#ed5955';
+            parentElement.style.borderColor = '#996260';
+            parentElement.removeChild(e.target);
+        });
+    };
+
     const domoNodes = props.domos.map(domo => {
         return (
-            <div key={domo._id} className="domo" style={{ backgroundColor: domo.alive ? '#55acee' : 'red' }}>
+            <div key={domo._id} className="domo" style={{ backgroundColor: domo.alive ? '#55acee' : '#ed5955', borderColor: domo.alive ? '#338ace' : '#996260' }}>
                 <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
                 <h3 className="domoName"> Name: {domo.name} </h3>
                 <h3 className="domoAge"> Age: {domo.age} </h3>
+                {domo.alive && <div id='domoDeath' onClick={(e) => killDomo(e, domo._id)}>X</div>}
             </div>
         );
     });

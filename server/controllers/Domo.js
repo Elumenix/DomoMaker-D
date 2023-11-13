@@ -41,8 +41,43 @@ const getDomos = async (req, res) => {
   }
 };
 
+const updateDomo = async (req, res) => {
+  if (!req.body.name || !req.body.age || req.body.alive === undefined) {
+    return res.status(400).json({ error: 'Name, age, and alive status are required!' });
+  }
+
+  const updateData = {
+    name: req.body.name,
+    age: req.body.age,
+    alive: req.body.alive,
+  };
+
+  try {
+    const filter = { _id: req.body.id, owner: req.session.account._id };
+    const options = { new: true };
+
+    const updatedDomo = await Domo.findOneAndUpdate(filter, updateData, options);
+
+    if (!updatedDomo) {
+      return res.status(400).json({ error: 'No Domo found to update!' });
+    }
+
+    const response = {
+      name: updatedDomo.name,
+      age: updatedDomo.age,
+      alive: updatedDomo.alive,
+    };
+
+    return res.status(200).json(response);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'An error occurred while updating the Domo!' });
+  }
+};
+
 module.exports = {
   makerPage,
   makeDomo,
   getDomos,
+  updateDomo,
 };
